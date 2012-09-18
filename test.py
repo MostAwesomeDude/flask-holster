@@ -8,7 +8,19 @@ app.debug = True
 
 @app.holster("/test")
 def test():
-    return {"data": "Hello from Holster!"}
+    from math import pi
+
+    return {
+        "data": "Hello from Holster!",
+        "nested": {
+            "numeric": 0,
+            "floating": pi,
+            "unicode": u"Espa\xf1ol",
+        },
+        "secure": {
+            "xss-sword": "<>"
+        }
+    }
 
 if __name__ == "__main__":
     app.run()
