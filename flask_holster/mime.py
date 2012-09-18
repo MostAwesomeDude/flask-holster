@@ -26,10 +26,8 @@ class MIME(object):
 
     def __str__(self):
         media = "%s/%s" % (self.category, self.filetype)
-        if self.params:
-            params = ", ".join("%s = %s" % t for t in self.params.iteritems())
-            return "%s (%s)" % (media, params)
-        return media
+        params = ", ".join("%s = %s" % t for t in self.params.iteritems())
+        return "%s (%s)" % (media, params)
 
     __repr__ = __str__
 
