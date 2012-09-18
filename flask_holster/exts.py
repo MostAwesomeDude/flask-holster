@@ -1,5 +1,6 @@
 ext_dict = {
     "html": "text/html",
+    "json": "application/json",
 }
 
 def guess_type(ext):
