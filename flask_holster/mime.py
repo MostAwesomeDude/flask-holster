@@ -25,11 +25,13 @@ class MIME(object):
                 self.params[k] = v
 
     def __str__(self):
-        media = "%s/%s" % (self.category, self.filetype)
         params = ", ".join("%s = %s" % t for t in self.params.iteritems())
-        return "%s (%s)" % (media, params)
+        return "%s (%s)" % (self.plain(), params)
 
     __repr__ = __str__
+
+    def plain(self):
+        return "%s/%s" % (self.category, self.filetype)
 
     def match(self, s):
         """
@@ -41,11 +43,16 @@ class MIME(object):
 
         category, filetype = s.split("/")
 
+        if category == "*":
+            category = self.category
+        if filetype == "*":
+            filetype = self.filetype
         if (match_with_wildcard(category, self.category) and
             match_with_wildcard(filetype, self.filetype)):
-            return self.params["q"]
+            unified = "%s/%s" % (category, filetype)
+            return unified, self.params["q"]
         else:
-            return 0.0
+            return None, 0.0
 
 class Accept(object):
     """
@@ -59,3 +66,19 @@ class Accept(object):
         return "<Accept [%s]>" % ", ".join(str(x) for x in self.types)
 
     __repr__ = __str__
+
+    def best(self, s):
+        """
+        Given a preferred MIME type as a string, return the best acceptable
+        MIME type.
+
+        None will be returned if no acceptable type could be found.
+        """
+
+        champ = None, 0.0
+        for mime in self.types:
+            t = mime.match(s)
+            if t[1] > champ[1]:
+                champ = t
+
+        return champ[0]
