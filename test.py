@@ -4,6 +4,8 @@ from flask.ext.holster.main import holsterize
 app = Flask(__name__)
 holsterize(app)
 
+app.debug = True
+
 @app.holster("/test")
 def test():
     return {"data": "Hello from Holster!"}
