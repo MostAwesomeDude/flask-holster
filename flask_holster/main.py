@@ -3,12 +3,16 @@ from functools import partial
 from flask import g, make_response, request
 from flask_holster.exts import guess_type
 from flask_holster.mime import Accept
+from flask_holster.views import PlainTemplate, templates
 
 def worker(view):
     def inner(*args, **kwargs):
         d = view(*args, **kwargs)
 
-        response = make_response(str(d))
+        template = templates.get(g.mime, PlainTemplate)
+        templater = template()
+
+        response = make_response(templater.format(d))
         response.headers["Content-Type"] = g.mime
         return response
     return inner
