@@ -1,3 +1,12 @@
+def match_with_wildcard(s1, s2):
+    """
+    If either parameter is the wildcard, match. Otherwise, check for equality.
+    """
+
+    if s1 == "*" or s2 == "*":
+        return True
+    return s1 == s2
+
 class MIME(object):
     """
     A MIME type.
@@ -5,7 +14,7 @@ class MIME(object):
 
     def __init__(self, s):
         pieces = s.split(";")
-        self.media = pieces[0]
+        self.category, self.filetype = pieces[0].split("/")
         self.params = {"q": 1.0}
         for piece in pieces[1:]:
             if "=" in piece:
@@ -16,10 +25,11 @@ class MIME(object):
                 self.params[k] = v
 
     def __str__(self):
+        media = "%s/%s" % (self.category, self.filetype)
         if self.params:
             params = ", ".join("%s = %s" % t for t in self.params.iteritems())
-            return "%s (%s)" % (self.media, params)
-        return self.media
+            return "%s (%s)" % (media, params)
+        return media
 
     __repr__ = __str__
 
@@ -31,10 +41,13 @@ class MIME(object):
         0 indicates no match.
         """
 
-        if s == self.media:
-            return self.params["q"]
+        category, filetype = s.split("/")
 
-        return 0.0
+        if (match_with_wildcard(category, self.category) and
+            match_with_wildcard(filetype, self.filetype)):
+            return self.params["q"]
+        else:
+            return 0.0
 
 class Accept(object):
     """
