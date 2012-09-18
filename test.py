@@ -18,7 +18,7 @@ def test():
             "unicode": u"Espa\xf1ol",
         },
         "secure": {
-            "xss-sword": "<>"
+            "xss-sword": ';!--"<XSS>=&{()}',
         }
     }
 
