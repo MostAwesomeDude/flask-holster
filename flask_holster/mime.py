@@ -6,10 +6,13 @@ class MIME(object):
     def __init__(self, s):
         pieces = s.split(";")
         self.media = pieces[0]
-        self.params = {}
+        self.params = {"q": 1.0}
         for piece in pieces[1:]:
             if "=" in piece:
                 k, v = piece.split("=", 1)
+                # Special case for q.
+                if k == "q":
+                    v = float(v)
                 self.params[k] = v
 
     def __str__(self):
@@ -19,6 +22,19 @@ class MIME(object):
         return self.media
 
     __repr__ = __str__
+
+    def match(self, s):
+        """
+        Return a quality parameter, as a float, indicating how well this type
+        matches the given type string.
+
+        0 indicates no match.
+        """
+
+        if s == self.media:
+            return self.params["q"]
+
+        return 0.0
 
 class Accept(object):
     """
