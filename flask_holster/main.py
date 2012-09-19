@@ -24,8 +24,13 @@ def holster(app, route):
     Decorator which replaces ``route()``.
     """
 
+    if route.endswith("/"):
+        extended = "%s.<ext>/" % route[:-1]
+    else:
+        extended = "%s.<ext>" % route
+
     router = app.route(route)
-    hrouter = app.route("%s.<ext>" % route)
+    hrouter = app.route(extended)
 
     def inner(view):
         router(worker(view))
