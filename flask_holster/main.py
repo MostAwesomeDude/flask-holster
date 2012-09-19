@@ -42,7 +42,7 @@ def holster_url_value_preprocessor(endpoint, values):
 
     accept = Accept(request.headers["accept"])
 
-    mime = accept.best(preferred)
+    mime = accept.best([preferred])
 
     g.mime = mime
 
