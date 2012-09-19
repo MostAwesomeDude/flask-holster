@@ -2,7 +2,7 @@ from functools import partial
 
 from flask import g, make_response, request
 from flask_holster.exts import guess_type
-from flask_holster.mime import Accept
+from flask_holster.mime import Accept, MIME
 from flask_holster.views import PlainTemplate, templates
 
 def worker(view):
@@ -43,7 +43,7 @@ def holster_url_value_preprocessor(endpoint, values):
     types = Accept(",".join(templates))
     if values and "ext" in values:
         ext = values.pop("ext")
-        types.types.insert(guess_type(ext), 0)
+        types.types.insert(0, MIME.from_string(guess_type(ext)))
 
     accept = Accept(request.headers["accept"])
 
