@@ -8,12 +8,13 @@ from flask_holster.views import PlainTemplate, templates
 def worker(view):
     def inner(*args, **kwargs):
         d = view(*args, **kwargs)
+        mime = g.mime.plain()
 
-        template = templates.get(g.mime, PlainTemplate)
+        template = templates.get(mime, PlainTemplate)
         templater = template()
 
         response = make_response(templater.format(d))
-        response.headers["Content-Type"] = g.mime
+        response.headers["Content-Type"] = mime
         return response
     return inner
 
@@ -34,15 +35,14 @@ def holster(app, route):
 
 
 def holster_url_value_preprocessor(endpoint, values):
+    types = Accept(",".join(templates))
     if "ext" in values:
         ext = values.pop("ext")
-        preferred = guess_type(ext)
-    else:
-        preferred = "text/plain"
+        types.types.insert(guess_type(ext), 0)
 
     accept = Accept(request.headers["accept"])
 
-    mime = accept.best([preferred])
+    mime = accept.best(types)
 
     g.mime = mime
 
