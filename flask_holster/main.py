@@ -36,7 +36,7 @@ def holster(app, route):
 
 def holster_url_value_preprocessor(endpoint, values):
     types = Accept(",".join(templates))
-    if "ext" in values:
+    if values and "ext" in values:
         ext = values.pop("ext")
         types.types.insert(guess_type(ext), 0)
 
