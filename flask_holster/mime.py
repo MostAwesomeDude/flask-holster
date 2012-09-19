@@ -93,7 +93,6 @@ class Accept(object):
 
         l = self.match(other)
         l.sort(key=lambda mime: mime.params["q"], reverse=True)
-        print l
         if l:
             return l[0]
         return None
