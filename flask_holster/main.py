@@ -43,7 +43,7 @@ def holster_url_value_preprocessor(endpoint, values):
     types = Accept(",".join(templates))
     if values and "ext" in values:
         ext = values.pop("ext")
-        types.types.insert(0, MIME.from_string(guess_type(ext)))
+        types.prefer(guess_type(ext))
 
     accept = Accept(request.headers["accept"])
 

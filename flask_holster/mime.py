@@ -77,6 +77,16 @@ class Accept(object):
 
     __repr__ = __str__
 
+    def prefer(self, s):
+        """
+        Parse a MIME type and prefer it over the other types in this listing.
+        """
+
+        mime = MIME.from_string(s)
+        for t in self.types:
+            t.params["q"] *= 0.5
+        self.types.append(mime)
+
     def match(self, other):
         """
         Generate a list of matched MIME types from another Accept listing.
