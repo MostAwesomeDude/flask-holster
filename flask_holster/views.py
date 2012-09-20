@@ -1,6 +1,6 @@
-from flask import json, render_template_string
+from flask import json, render_template, render_template_string
 
-html_template = """
+default_html_template = """
 {% macro dump(d) %}
     <ul>
     {% for k in d %}
@@ -21,8 +21,15 @@ html_template = """
 
 class HTMLTemplate(object):
 
+    def __init__(self, template=None, from_string=True):
+        self.template = template if template else default_html_template
+        self.from_string = from_string
+
     def format(self, d):
-        return render_template_string(html_template, d=d)
+        if self.from_string:
+            return render_template_string(self.template, d=d)
+        else:
+            return render_template(self.template, d=d)
 
 
 
@@ -41,7 +48,7 @@ class PlainTemplate(object):
 
 
 templates = {
-    "text/html":        HTMLTemplate,
-    "application/json": JSONTemplate,
-    "text/plain":       PlainTemplate,
+    "text/html":        HTMLTemplate(),
+    "application/json": JSONTemplate(),
+    "text/plain":       PlainTemplate(),
 }

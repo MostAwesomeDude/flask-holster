@@ -1,5 +1,6 @@
 from flask import Flask
-from flask.ext.holster.main import holsterize
+from flask.ext.holster.main import holsterize, with_template
+from flask.ext.holster.views import HTMLTemplate
 
 app = Flask(__name__)
 holsterize(app)
@@ -21,6 +22,15 @@ def test():
             "xss-sword": ';!--"<XSS>=&{()}',
         }
     }
+
+custom_template = """
+<h1>{{ d.header }}</h1>
+"""
+
+@app.holster("/custom")
+@with_template("html", HTMLTemplate(custom_template))
+def custom():
+    return {"header": "HELLO OUT THERE"}
 
 if __name__ == "__main__":
     app.run()
