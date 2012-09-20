@@ -1,25 +1,22 @@
-from functools import partial
+from functools import partial, wraps
 
 from flask import g, make_response, request
 from flask_holster.exts import ext_dict, guess_type
 from flask_holster.mime import Accept
 from flask_holster.views import HTMLTemplate, PlainTemplate, templates
 
-def worker(view):
-    def inner(*args, **kwargs):
-        print view
-        d = view(*args, **kwargs)
-        mime = g.mime.plain()
+def worker(view, *args, **kwargs):
+    d = view(*args, **kwargs)
+    mime = g.mime.plain()
 
-        overrides = getattr(view, "_holsters", {})
-        templater = overrides.get(mime)
-        if not templater:
-            templater = templates.get(mime, PlainTemplate())
+    overrides = getattr(view, "_holsters", {})
+    templater = overrides.get(mime)
+    if not templater:
+        templater = templates.get(mime, PlainTemplate())
 
-        response = make_response(templater.format(d))
-        response.headers["Content-Type"] = mime
-        return response
-    return inner
+    response = make_response(templater.format(d))
+    response.headers["Content-Type"] = mime
+    return response
 
 
 def with_template(mime, templater):
@@ -65,8 +62,9 @@ def holster(app, route):
     hrouter = app.route(extended)
 
     def inner(view):
-        router(worker(view))
-        hrouter(worker(view))
+        p = wraps(view)(partial(worker, view))
+        router(p)
+        hrouter(p)
 
     return inner
 
