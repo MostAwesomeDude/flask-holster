@@ -32,5 +32,15 @@ custom_template = """
 def custom():
     return {"header": "HELLO OUT THERE"}
 
+@app.holster("/<int:i>/param")
+def param(i):
+    return {"parameter": i}
+
+@app.holster("/multiple/<int:i>/<int:j>")
+@app.holster("/multiple/<int:i>")
+@app.holster("/multiple")
+def multiple(i=None, j=None):
+    return {"first": i, "second": j}
+
 if __name__ == "__main__":
     app.run()
