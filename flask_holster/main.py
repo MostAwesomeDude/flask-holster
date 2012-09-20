@@ -65,6 +65,10 @@ def holster(app, route):
         p = wraps(view)(partial(worker, view))
         router(p)
         hrouter(p)
+        # Return the original view so that people can do more things with it.
+        # Even if they re-holster the view, it's gonna be way easier for us to
+        # do things if we don't multiply-wrap it.
+        return view
 
     return inner
 
