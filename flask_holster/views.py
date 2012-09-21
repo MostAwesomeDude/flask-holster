@@ -52,3 +52,16 @@ templates = {
     "application/json": JSONTemplate(),
     "text/plain":       PlainTemplate(),
 }
+
+# YAML. Requires the yaml module to be installed.
+try:
+    from yaml import safe_dump
+
+    class YAMLTemplate(object):
+
+        def format(self, d):
+            return safe_dump(d)
+
+    templates["application/x-yaml"] = YAMLTemplate()
+except ImportError:
+    pass
