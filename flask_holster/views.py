@@ -1,6 +1,8 @@
 from flask import json, render_template, render_template_string
 
 default_html_template = """
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta charset="utf-8" />
 {% macro dump(d) %}
     <ul>
     {% for k in d %}
