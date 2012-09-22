@@ -6,6 +6,7 @@ app = Flask(__name__)
 init_holster(app)
 
 app.debug = True
+app.config["HOLSTER_COMPRESS"] = True
 
 @app.holster("/test")
 def test():

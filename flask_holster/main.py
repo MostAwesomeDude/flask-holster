@@ -1,11 +1,12 @@
 from functools import partial, wraps
+from zlib import compress
 
 from flask import g, make_response, request
 from flask_holster.exts import ext_dict, guess_type
 from flask_holster.mime import Accept
 from flask_holster.views import HTMLTemplate, PlainTemplate, templates
 
-def worker(view, *args, **kwargs):
+def worker(app, view, *args, **kwargs):
     d = view(*args, **kwargs)
     mime = g.mime.plain()
 
@@ -14,15 +15,34 @@ def worker(view, *args, **kwargs):
     if not templater:
         templater = templates.get(mime, PlainTemplate())
 
+    # Run the templater.
+    data = templater.format(d)
+
+    # Optionally compress the data.
+    if app.config["HOLSTER_COMPRESS"] and "deflate" in request.accept_encodings:
+        # It's possible that our data is Unicode. Thanks, Jinja. In that case,
+        # turn it into UTF-8 before compressing.
+        if isinstance(data, unicode):
+            data = data.encode("utf-8")
+        data = compress(data)
+        compressed = True
+    else:
+        compressed = False
+
     # Use the formatted data as the response body.
-    response = make_response(templater.format(d))
+    response = make_response(data)
 
     # Indicate the MIME type of the data that we are sending back.
     response.headers["Content-Type"] = mime
 
     # Indicate to caches that the data returned is dependent on the Accept
     # header's value in the request.
-    response.headers["Vary"] = "Accept"
+    response.vary.add("Accept")
+
+    # Fill out the compression header and indicate varyings, if needed.
+    if compressed:
+        response.headers["Content-Encoding"] = "deflate"
+        response.vary.add("Accept-Encoding")
 
     return response
 
@@ -70,7 +90,7 @@ def holster(app, route):
     hrouter = app.route(extended)
 
     def inner(view):
-        p = wraps(view)(partial(worker, view))
+        p = wraps(view)(partial(worker, app, view))
         router(p)
         hrouter(p)
         # Return the original view so that people can do more things with it.
@@ -98,8 +118,11 @@ def init_holster(app):
     """
     Initialize a Flask to have holsters.
 
-    This is mostly just attaching hooks.
+    This is mostly just attaching hooks and setting default configuration
+    values.
     """
 
     app.holster = partial(holster, app)
     app.url_value_preprocessor(holster_url_value_preprocessor)
+
+    app.config.setdefault("HOLSTER_COMPRESS", False)
