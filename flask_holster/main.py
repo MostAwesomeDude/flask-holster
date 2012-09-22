@@ -14,8 +14,16 @@ def worker(view, *args, **kwargs):
     if not templater:
         templater = templates.get(mime, PlainTemplate())
 
+    # Use the formatted data as the response body.
     response = make_response(templater.format(d))
+
+    # Indicate the MIME type of the data that we are sending back.
     response.headers["Content-Type"] = mime
+
+    # Indicate to caches that the data returned is dependent on the Accept
+    # header's value in the request.
+    response.headers["Vary"] = "Accept"
+
     return response
 
 
