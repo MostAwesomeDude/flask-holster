@@ -86,6 +86,12 @@ def holster_url_value_preprocessor(endpoint, values):
     g.mime = mime
 
 
-def holsterize(app):
+def init_holster(app):
+    """
+    Initialize a Flask to have holsters.
+
+    This is mostly just attaching hooks.
+    """
+
     app.holster = partial(holster, app)
     app.url_value_preprocessor(holster_url_value_preprocessor)

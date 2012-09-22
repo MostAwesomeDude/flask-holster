@@ -1,9 +1,9 @@
 from flask import Flask
-from flask.ext.holster.main import holsterize, with_template
+from flask.ext.holster.main import init_holster, with_template
 from flask.ext.holster.views import HTMLTemplate
 
 app = Flask(__name__)
-holsterize(app)
+init_holster(app)
 
 app.debug = True
 
