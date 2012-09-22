@@ -12,6 +12,7 @@ setup(
     description="Rigid MVC content negotiation for Flask",
     long_description=open("README.rst").read(),
     packages=["flask_holster"],
+    test_suite="flask_holster.test",
     zip_safe=False,
     platforms="any",
     install_requires=[
