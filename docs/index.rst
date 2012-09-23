@@ -99,8 +99,10 @@ To this::
     def baz(foo, bar):
         return {"foo": foo, "bar": bar}
 
-.. toctree
+.. toctree::
    :maxdepth: 2
+
+   renderers
 
 
 
