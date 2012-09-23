@@ -35,14 +35,14 @@ class HTMLTemplate(object):
 
 
 
-class JSONTemplate(object):
+class JSONRenderer(object):
 
     def format(self, d):
         return json.dumps(d)
 
 
 
-class PlainTemplate(object):
+class Str(object):
 
     def format(self, d):
         return str(d)
@@ -51,19 +51,19 @@ class PlainTemplate(object):
 
 templates = {
     "text/html":        HTMLTemplate(),
-    "application/json": JSONTemplate(),
-    "text/plain":       PlainTemplate(),
+    "application/json": JSONRenderer(),
+    "text/plain":       Str(),
 }
 
 # YAML. Requires the yaml module to be installed.
 try:
     from yaml import safe_dump
 
-    class YAMLTemplate(object):
+    class YAMLRenderer(object):
 
         def format(self, d):
             return safe_dump(d)
 
-    templates["application/x-yaml"] = YAMLTemplate()
+    templates["application/x-yaml"] = YAMLRenderer()
 except ImportError:
     pass
