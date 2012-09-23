@@ -92,18 +92,12 @@ Simply go from this::
 
 To this::
 
-    from flask.ext.holster.main import with_template
-    from flask.ext.holster.views import HTMLTemplate
+    from flask.ext.holster.simple import html
 
     @app.holster("/<foo>/<bar>/baz")
-    @with_template("html", HTMLTemplate("baz.html", from_string=False))
+    @html("baz.html")
     def baz(foo, bar):
         return {"foo": foo, "bar": bar}
-
-.. note::
-   This example is really messy, mostly because ``with_template`` is kind of
-   awkward to use. A new helper should be introduced that takes away that
-   complexity and provides simplicity similar to ``render_template()``.
 
 .. toctree
    :maxdepth: 2
