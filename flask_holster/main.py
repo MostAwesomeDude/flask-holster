@@ -4,7 +4,7 @@ from zlib import compress
 from flask import g, make_response, request
 from flask_holster.exts import ext_dict, guess_type
 from flask_holster.mime import Accept
-from flask_holster.views import HTMLTemplate, PlainTemplate, templates
+from flask_holster.views import HTMLTemplate, Str, templates
 
 def worker(app, view, *args, **kwargs):
     d = view(*args, **kwargs)
@@ -13,7 +13,7 @@ def worker(app, view, *args, **kwargs):
     overrides = getattr(view, "_holsters", {})
     templater = overrides.get(mime)
     if not templater:
-        templater = templates.get(mime, PlainTemplate())
+        templater = templates.get(mime, Str())
 
     # Run the templater.
     data = templater.format(d)
