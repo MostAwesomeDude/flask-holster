@@ -43,5 +43,10 @@ def param(i):
 def multiple(i=None, j=None):
     return {"first": i, "second": j}
 
+@app.bare_holster("/bare")
+@app.holsterize
+def bare():
+    return {"bears": ["grizzly", "black", "panda"]}
+
 if __name__ == "__main__":
     app.run()
