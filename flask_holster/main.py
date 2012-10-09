@@ -79,6 +79,13 @@ def html_template(template):
 def holster(app, route):
     """
     Decorator which replaces ``route()``.
+
+    This decorator is nested because it is meant to be called in the same
+    style as ``route()``:
+
+        @app.holster("/")
+        def index():
+            pass
     """
 
     if route.endswith("/"):
@@ -86,13 +93,12 @@ def holster(app, route):
     else:
         extended = "%s.<ext>" % route
 
-    router = app.route(route)
-    hrouter = app.route(extended)
-
     def inner(view):
+        name = view.__name__
         p = wraps(view)(partial(worker, app, view))
-        router(p)
-        hrouter(p)
+        app.add_url_rule(route, endpoint=name, view_func=p)
+        app.add_url_rule(extended, endpoint="%s-ext" % name, view_func=p)
+
         # Return the original view so that people can do more things with it.
         # Even if they re-holster the view, it's gonna be way easier for us to
         # do things if we don't multiply-wrap it.
