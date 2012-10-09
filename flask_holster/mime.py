@@ -1,5 +1,3 @@
-from itertools import product
-
 def match_with_wildcard(s1, s2):
     """
     If either parameter is the wildcard, match. Otherwise, check for equality.
@@ -92,7 +90,15 @@ class Accept(object):
         Generate a list of matched MIME types from another Accept listing.
         """
 
-        return [x.match(y) for (x, y) in product(self.types, other.types)]
+        # As long as we can't have itertools.product(), we have to do this the
+        # slow way.
+        l = []
+
+        for x in self.types:
+            for y in other.types:
+                l.append(x.match(y))
+
+        return l
 
     def best(self, other):
         """
