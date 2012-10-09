@@ -58,6 +58,12 @@ with ``with_template``::
 Changelog
 =========
 
+0.2.2
+-----
+
+ * Bugfix: Pass along names inside ``lift()`` to correctly name reversed
+   routes
+
 0.2.1
 -----
 
