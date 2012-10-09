@@ -1,3 +1,5 @@
+from functools import wraps
+
 def lift(f):
     """
     "Decoratorial" lift.
@@ -26,7 +28,9 @@ def lift(f):
     64
     """
 
+    @wraps(f)
     def deco(g):
+        @wraps(g)
         def inner(*args, **kwargs):
             return f(g(*args, **kwargs))
         return inner
