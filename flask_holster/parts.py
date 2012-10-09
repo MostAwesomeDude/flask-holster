@@ -60,6 +60,28 @@ def holsterize(app, view):
     return p
 
 
+def extend(route):
+    """
+    Add a file extension to a route.
+
+    This function adds a file extension, called "ext", to a route.
+
+    If the route ends with a trailing slash, then the extension precedes the
+    slash. This preserves the standard directory-redirect mechanism of
+    Werkzeug.
+
+    If the route is the root, then the extension is tacked onto the end. This
+    looks awkward but there's no better solution.
+    """
+
+    if route == "/":
+        return "/.<ext>"
+    elif route.endswith("/"):
+        return "%s.<ext>/" % route[:-1]
+    else:
+        return "%s.<ext>" % route
+
+
 def bare_holster(app, route):
     """
     Decorator which replaces ``route()``.
@@ -75,10 +97,7 @@ def bare_holster(app, route):
     for holstering views, only for attaching them to the app.
     """
 
-    if route.endswith("/"):
-        extended = "%s.<ext>/" % route[:-1]
-    else:
-        extended = "%s.<ext>" % route
+    extended = extend(route)
 
     def inner(view):
         name = view.__name__
