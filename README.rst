@@ -58,6 +58,11 @@ with ``with_template``::
 Changelog
 =========
 
+0.2.1
+-----
+
+ * Bugfix: Specialize extended routes for "/" to avoid malformed routes
+
 0.2
 ---
 
