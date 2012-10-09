@@ -54,3 +54,16 @@ with ``with_template``::
     @with_template("image/png", PNGHeaderMaker)
     def custom():
         return {"header": "Welcome to my site!"}
+
+Changelog
+=========
+
+1.1.2
+-----
+
+ * Feature: Changelog
+ * Feature: Documentation
+ * Feature: Optional ``HOLSTER_COMPRESS`` setting for automatically
+   compressing response data
+ * Enhancement: Vary header is filled out
+ * Change: Improved names of view objects
