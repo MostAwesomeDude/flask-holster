@@ -58,6 +58,14 @@ with ``with_template``::
 Changelog
 =========
 
+0.2
+---
+
+ * Compatibility: Don't use itertools, for Python 2.5
+ * Enhancement: Split holsterizing views into two pieces, for easier
+   customization
+ * Feature: New helpers module for helping write customized views
+
 1.1.2
 -----
 
