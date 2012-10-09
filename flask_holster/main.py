@@ -1,50 +1,10 @@
-from functools import partial, wraps
-from zlib import compress
+from functools import partial
 
-from flask import g, make_response, request
+from flask import g, request
 from flask_holster.exts import ext_dict, guess_type
 from flask_holster.mime import Accept
-from flask_holster.views import HTMLTemplate, Str, templates
-
-def worker(app, view, *args, **kwargs):
-    d = view(*args, **kwargs)
-    mime = g.mime.plain()
-
-    overrides = getattr(view, "_holsters", {})
-    templater = overrides.get(mime)
-    if not templater:
-        templater = templates.get(mime, Str())
-
-    # Run the templater.
-    data = templater.format(d)
-
-    # Optionally compress the data.
-    if app.config["HOLSTER_COMPRESS"] and "deflate" in request.accept_encodings:
-        # It's possible that our data is Unicode. Thanks, Jinja. In that case,
-        # turn it into UTF-8 before compressing.
-        if isinstance(data, unicode):
-            data = data.encode("utf-8")
-        data = compress(data)
-        compressed = True
-    else:
-        compressed = False
-
-    # Use the formatted data as the response body.
-    response = make_response(data)
-
-    # Indicate the MIME type of the data that we are sending back.
-    response.headers["Content-Type"] = mime
-
-    # Indicate to caches that the data returned is dependent on the Accept
-    # header's value in the request.
-    response.vary.add("Accept")
-
-    # Fill out the compression header and indicate varyings, if needed.
-    if compressed:
-        response.headers["Content-Encoding"] = "deflate"
-        response.vary.add("Accept-Encoding")
-
-    return response
+from flask_holster.parts import bare_holster, holsterize
+from flask_holster.views import HTMLTemplate, templates
 
 
 def with_template(mime, templater):
@@ -88,16 +48,10 @@ def holster(app, route):
             pass
     """
 
-    if route.endswith("/"):
-        extended = "%s.<ext>/" % route[:-1]
-    else:
-        extended = "%s.<ext>" % route
-
     def inner(view):
-        name = view.__name__
-        p = wraps(view)(partial(worker, app, view))
-        app.add_url_rule(route, endpoint=name, view_func=p)
-        app.add_url_rule(extended, endpoint="%s-ext" % name, view_func=p)
+        wrapped = holsterize(app, view)
+        # This returns the wrapped view. We don't care about it though.
+        bare_holster(app, route)(wrapped)
 
         # Return the original view so that people can do more things with it.
         # Even if they re-holster the view, it's gonna be way easier for us to
@@ -128,7 +82,9 @@ def init_holster(app):
     values.
     """
 
+    app.bare_holster = partial(bare_holster, app)
     app.holster = partial(holster, app)
+    app.holsterize = partial(holsterize, app)
     app.url_value_preprocessor(holster_url_value_preprocessor)
 
     app.config.setdefault("HOLSTER_COMPRESS", False)
