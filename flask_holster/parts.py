@@ -11,6 +11,12 @@ def _worker(app, view, *args, **kwargs):
     """
 
     d = view(*args, **kwargs)
+
+    if callable(d):
+        # We've been hoodwinked! It's pretty likely that d is a handcrafted
+        # response. Should we let it through as-is? Yes.
+        return d
+
     mime = g.mime.plain()
 
     overrides = getattr(view, "_holsters", {})
