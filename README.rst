@@ -58,6 +58,13 @@ with ``with_template``::
 Changelog
 =========
 
+0.2.3
+-----
+
+ * Bugfix: Permit kwargs in routing decorators, including ``methods``. 
+ * Bugfix: Pass along premade responses as-is without any interference.
+   Permits things like ``redirect()`` inside otherwise-rigid controllers.
+
 0.2.2
 -----
 
