@@ -36,7 +36,7 @@ def html_template(template):
         from_string=False))
 
 
-def holster(app, route):
+def holster(app, route, **kwargs):
     """
     Decorator which replaces ``route()``.
 
@@ -51,7 +51,7 @@ def holster(app, route):
     def inner(view):
         wrapped = holsterize(app, view)
         # This returns the wrapped view. We don't care about it though.
-        bare_holster(app, route)(wrapped)
+        bare_holster(app, route, **kwargs)(wrapped)
 
         # Return the original view so that people can do more things with it.
         # Even if they re-holster the view, it's gonna be way easier for us to

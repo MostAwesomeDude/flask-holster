@@ -82,7 +82,7 @@ def extend(route):
         return "%s.<ext>" % route
 
 
-def bare_holster(app, route):
+def bare_holster(app, route, **kwargs):
     """
     Decorator which replaces ``route()``.
 
@@ -101,8 +101,9 @@ def bare_holster(app, route):
 
     def inner(view):
         name = view.__name__
-        app.add_url_rule(route, endpoint=name, view_func=view)
-        app.add_url_rule(extended, endpoint="%s-ext" % name, view_func=view)
+        app.add_url_rule(route, endpoint=name, view_func=view, **kwargs)
+        app.add_url_rule(extended, endpoint="%s-ext" % name, view_func=view,
+                **kwargs)
         return view
 
     return inner
