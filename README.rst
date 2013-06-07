@@ -58,6 +58,12 @@ with ``with_template``::
 Changelog
 =========
 
+0.2.4
+-----
+
+ * Bugfix: Correctly omit trailing colons (and related recursion) on list
+   items in the default HTML view template.
+
 0.2.3
 -----
 
