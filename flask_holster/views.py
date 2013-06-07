@@ -7,13 +7,17 @@ default_html_template = """
     <ul>
     {% for k in d %}
         {% set v = d[k] %}
-        <li>{{ k }}:
-            {% if v is mapping %}
-            <ul>{{ dump(v) }}</ul>
-            {% else %}
-            {{ v|e }}
-            {% endif %}
-        </li>
+        {% if v is defined %}
+            <li>{{ k }}:
+                {% if v is mapping %}
+                <ul>{{ dump(v) }}</ul>
+                {% else %}
+                {{ v|e }}
+                {% endif %}
+            </li>
+        {% else %}
+            <li>{{ k }}</li>
+        {% endif %}
     {% endfor %}
     </ul>
 {% endmacro %}
