@@ -49,7 +49,7 @@ def holster(app, route, **kwargs):
     """
 
     def inner(view):
-        wrapped = holsterize(app, view)
+        wrapped = holsterize(view)
         # This returns the wrapped view. We don't care about it though.
         bare_holster(app, route, **kwargs)(wrapped)
 
@@ -93,7 +93,7 @@ def init_holster(app):
 
     app.bare_holster = partial(bare_holster, app)
     app.holster = partial(holster, app)
-    app.holsterize = partial(holsterize, app)
+    app.holsterize = holsterize
     app.url_value_preprocessor(holster_url_value_preprocessor)
 
     if hasattr(app, "config"):

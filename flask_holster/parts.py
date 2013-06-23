@@ -1,11 +1,11 @@
 from functools import partial, wraps
 from zlib import compress
 
-from flask import g, make_response, request
+from flask import current_app, g, make_response, request
 from flask_holster.views import Str, templates
 
 
-def _worker(app, view, *args, **kwargs):
+def _worker(view, *args, **kwargs):
     """
     The actual worker.
     """
@@ -28,7 +28,8 @@ def _worker(app, view, *args, **kwargs):
     data = templater.format(d)
 
     # Optionally compress the data.
-    if app.config["HOLSTER_COMPRESS"] and "deflate" in request.accept_encodings:
+    compress_setting = current_app.config.get("HOLSTER_COMPRESS", False)
+    if compress_setting and "deflate" in request.accept_encodings:
         # It's possible that our data is Unicode. Thanks, Jinja. In that case,
         # turn it into UTF-8 before compressing.
         if isinstance(data, unicode):
@@ -56,12 +57,12 @@ def _worker(app, view, *args, **kwargs):
     return response
 
 
-def holsterize(app, view):
+def holsterize(view):
     """
     Wrap a view with a holster.
     """
 
-    p = wraps(view)(partial(_worker, app, view))
+    p = wraps(view)(partial(_worker, view))
 
     return p
 
