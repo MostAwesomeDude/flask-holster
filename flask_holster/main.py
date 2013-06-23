@@ -71,7 +71,7 @@ def holster_url_value_preprocessor(endpoint, values):
 
     mime = accept.best(types)
 
-    g.mime = mime
+    g._holster_mime = mime
 
 
 def init_holster(app):
