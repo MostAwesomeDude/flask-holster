@@ -62,6 +62,15 @@ def holster(app, route, **kwargs):
 
 
 def holster_url_value_preprocessor(endpoint, values):
+    """
+    Figure out which MIME type should be returned, and prepare the value for
+    later processing.
+    """
+
+    # Check to see if this has already happened, e.g. in a blueprint.
+    if hasattr(g, "_holster_mime"):
+        return
+
     types = Accept(",".join(templates))
     if values and "ext" in values:
         ext = values.pop("ext")
@@ -76,7 +85,7 @@ def holster_url_value_preprocessor(endpoint, values):
 
 def init_holster(app):
     """
-    Initialize a Flask to have holsters.
+    Initialize a Flask application or blueprint to have holsters.
 
     This is mostly just attaching hooks and setting default configuration
     values.
@@ -87,4 +96,5 @@ def init_holster(app):
     app.holsterize = partial(holsterize, app)
     app.url_value_preprocessor(holster_url_value_preprocessor)
 
-    app.config.setdefault("HOLSTER_COMPRESS", False)
+    if hasattr(app, "config"):
+        app.config.setdefault("HOLSTER_COMPRESS", False)
