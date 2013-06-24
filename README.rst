@@ -58,6 +58,12 @@ with ``with_template``::
 Changelog
 =========
 
+0.2.5
+-----
+
+ * Feature: ``init_holster()`` now works on Flask blueprints as well as Flask
+   applications.
+
 0.2.4
 -----
 

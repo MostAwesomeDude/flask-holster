@@ -4,7 +4,7 @@ from setuptools import setup
 
 setup(
     name="Flask-Holster",
-    version="0.2.4",
+    version="0.2.5",
     url="http://github.com/MostAwesomeDude/flask-holster",
     license="MIT",
     author="Corbin Simpson",
