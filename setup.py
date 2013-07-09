@@ -4,7 +4,11 @@ from setuptools import setup
 
 setup(
     name="Flask-Holster",
-    version="0.2.5",
+    # Instead of hardcoding a version, use vcversioner.
+    setup_requires=[
+        "vcversioner",
+    ],
+    vcversioner={},
     url="http://github.com/MostAwesomeDude/flask-holster",
     license="MIT",
     author="Corbin Simpson",
