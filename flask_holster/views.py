@@ -38,12 +38,27 @@ class HTMLTemplate(object):
             return render_template(self.template, d=d)
 
 
-
 class JSONRenderer(object):
 
     def format(self, d):
         return json.dumps(d)
 
+
+class YAMLRenderer(object):
+
+    def format(self, d):
+        """
+        Serialize a dictionary into YAML.
+
+        Format using PyYAML's yaml module if available, or json otherwise.
+        This is fine, because JSON is a subset of YAML.
+        """
+
+        try:
+            from yaml import safe_dump
+            return safe_dump(d)
+        except ImportError:
+            return json.dumps(d)
 
 
 class Str(object):
@@ -52,22 +67,9 @@ class Str(object):
         return str(d)
 
 
-
 templates = {
-    "text/html":        HTMLTemplate(),
-    "application/json": JSONRenderer(),
-    "text/plain":       Str(),
+    "application/json":   JSONRenderer(),
+    "application/x-yaml": YAMLRenderer(),
+    "text/html":          HTMLTemplate(),
+    "text/plain":         Str(),
 }
-
-# YAML. Requires the yaml module to be installed.
-try:
-    from yaml import safe_dump
-
-    class YAMLRenderer(object):
-
-        def format(self, d):
-            return safe_dump(d)
-
-    templates["application/x-yaml"] = YAMLRenderer()
-except ImportError:
-    pass
