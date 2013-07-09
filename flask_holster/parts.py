@@ -17,7 +17,7 @@ def _worker(view, *args, **kwargs):
         # response. Should we let it through as-is? Yes.
         return d
 
-    mime = g._holster_mime.plain()
+    mime = g._holster_mime
 
     overrides = getattr(view, "_holsters", {})
     templater = overrides.get(mime)

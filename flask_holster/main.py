@@ -2,7 +2,7 @@ from functools import partial
 
 from flask import g, request
 from flask_holster.exts import ext_dict, guess_type
-from flask_holster.mime import Accept
+from flask_holster.mime import preferring
 from flask_holster.parts import bare_holster, holsterize
 from flask_holster.views import HTMLTemplate, templates
 
@@ -71,14 +71,19 @@ def holster_url_value_preprocessor(endpoint, values):
     if hasattr(g, "_holster_mime"):
         return
 
-    types = Accept(",".join(templates))
+    accept = request.accept_mimetypes
+
+    # If the file extension was in there, then prefer a type based on the
+    # extension.
     if values and "ext" in values:
         ext = values.pop("ext")
-        types.prefer(guess_type(ext))
+        accept = preferring(guess_type(ext), accept)
 
-    accept = Accept(request.headers["accept"])
+    print accept
 
-    mime = accept.best(types)
+    mime = accept.best_match(templates.keys())
+
+    print mime
 
     g._holster_mime = mime
 
