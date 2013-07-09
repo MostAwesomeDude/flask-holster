@@ -42,7 +42,7 @@ Holster currently has default renderers for the following formats:
  * HTML
  * JSON
  * Plaintext
- * YAML
+ * YAML (with optional PyYAML support for prettified YAML)
 
 Users can also override renderers for any format or MIME type they would like,
 with ``with_template``::
@@ -57,6 +57,18 @@ with ``with_template``::
 
 Changelog
 =========
+
+0.3
+---
+
+ * Compatibility: Require vcversioner for version numbers.
+ * Compatibility: The handwritten MIME parser has been removed in favor of the
+   one in Werkzeug. As a result, Flask-Holster is slightly smaller and should
+   handle corner cases slightly better.
+ * Bugfix: Always define a YAML conversion. For pretty YAML, install PyYAML.
+   YAML output is now always enabled, using JSON as a fallback when PyYAML is
+   not available. PyYAML is *not* required and is not in the
+   `requirements.txt`.
 
 0.2.5
 -----
