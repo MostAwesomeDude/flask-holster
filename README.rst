@@ -58,6 +58,11 @@ with ``with_template``::
 Changelog
 =========
 
+0.3.1
+-----
+
+ * Bugfix: Remove extraneous debugging statements.
+
 0.3
 ---
 

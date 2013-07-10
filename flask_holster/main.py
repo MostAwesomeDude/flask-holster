@@ -79,13 +79,7 @@ def holster_url_value_preprocessor(endpoint, values):
         ext = values.pop("ext")
         accept = preferring(guess_type(ext), accept)
 
-    print accept
-
-    mime = accept.best_match(templates.keys())
-
-    print mime
-
-    g._holster_mime = mime
+    g._holster_mime = accept.best_match(templates.keys())
 
 
 def init_holster(app):
