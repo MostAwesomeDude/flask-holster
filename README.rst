@@ -48,7 +48,7 @@ Users can also override renderers for any format or MIME type they would like,
 with ``with_template``::
 
     from my_sweet_website import PNGHeaderMaker
-    from flask.ext.holster.views import with_template
+    from flask.ext.holster.main import with_template
 
     @app.holster("/customized")
     @with_template("image/png", PNGHeaderMaker)
