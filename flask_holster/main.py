@@ -4,7 +4,7 @@ from flask import g, request
 from flask_holster.exts import ext_dict, guess_type
 from flask_holster.mime import preferring
 from flask_holster.parts import bare_holster, holsterize
-from flask_holster.views import HTMLTemplate, templates
+from flask_holster.views import HTMLTemplate
 
 
 def with_template(mime, templater):
@@ -14,7 +14,7 @@ def with_template(mime, templater):
     This decoration must happen prior to the holstering:
 
         @app.holster("/example")
-        @with_template("html", HTMLTemplater("example.html"))
+        @with_template("html", HTMLTemplate("example.html"))
         def example():
             return {}
     """
@@ -79,7 +79,7 @@ def holster_url_value_preprocessor(endpoint, values):
         ext = values.pop("ext")
         accept = preferring(guess_type(ext), accept)
 
-    g._holster_mime = accept.best_match(templates.keys())
+    g._holster_mime = accept
 
 
 def init_holster(app):

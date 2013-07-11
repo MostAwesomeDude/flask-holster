@@ -17,9 +17,14 @@ def _worker(view, *args, **kwargs):
         # response. Should we let it through as-is? Yes.
         return d
 
-    mime = g._holster_mime
-
+    # Make the list of acceptable MIME types, and find the best match. Use
+    # anything custom-made for this view before anything else.
     overrides = getattr(view, "_holsters", {})
+    acceptable = overrides.keys() + templates.keys()
+
+    accept = g._holster_mime
+    mime = accept.best_match(acceptable)
+
     templater = overrides.get(mime)
     if not templater:
         templater = templates.get(mime, Str())
