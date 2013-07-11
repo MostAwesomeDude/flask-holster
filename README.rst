@@ -58,6 +58,13 @@ with ``with_template``::
 Changelog
 =========
 
+0.3.2
+-----
+
+ * Bugfix: Custom templaters were being incorrectly unused if they were not
+   HTML or JSON templaters.
+ * Feature: Allow "svg" as an extension for the "image/svg+xml" MIME type.
+
 0.3.1
 -----
 
