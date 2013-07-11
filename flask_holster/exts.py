@@ -1,6 +1,7 @@
 ext_dict = {
     "html": "text/html",
     "json": "application/json",
+    "svg":  "image/svg+xml",
     # The YAML MIME type is not standardized. This is the same type Rails
     # uses; hopefully it is close enough.
     "yaml": "application/x-yaml",
