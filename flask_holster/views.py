@@ -1,8 +1,15 @@
 from flask import json, render_template, render_template_string
 
 default_html_template = """
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta charset="utf-8" />
+<!DOCTYPE html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    {% if d["title"] is defined %}
+        <title>{{ d["title"] }}</title>
+    {% endif %}
+</head>
+<body>
 {% macro dump(d) %}
     <ul>
     {% for k in d %}
@@ -22,6 +29,7 @@ default_html_template = """
     </ul>
 {% endmacro %}
 {{ dump(d) }}
+</body>
 """
 
 

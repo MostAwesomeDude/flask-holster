@@ -44,6 +44,10 @@ Holster currently has default renderers for the following formats:
  * Plaintext
  * YAML (with optional PyYAML support for prettified YAML)
 
+These default renderers are provided mostly for bootstrapping and development,
+although the JSON and YAML renderers are likely very similar to the renderers
+that one might desire in production.
+
 Users can also override renderers for any format or MIME type they would like,
 with ``with_template``::
 
@@ -55,8 +59,22 @@ with ``with_template``::
     def custom():
         return {"header": "Welcome to my site!"}
 
+Forcing a Renderer
+------------------
+
+Sometimes one wants ``url_for()`` to pick a particular renderer for a target
+endpoint, instead of letting Holster and the user agent negotiate a particular
+format. I, uh, should write something here at some point soon.
+
 Changelog
 =========
+
+0.3.3
+-----
+
+ * Feature: The ``"title"`` key now holds special significance: it will be
+   used for titles in built-in renderers, if the renderer supports the notion
+   of a title.
 
 0.3.2
 -----
