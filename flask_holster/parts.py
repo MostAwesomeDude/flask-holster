@@ -5,6 +5,9 @@ from flask import current_app, g, make_response, request
 from flask_holster.views import Str, templates
 
 
+_holsters = {}
+
+
 def _worker(view, *args, **kwargs):
     """
     The actual worker.
@@ -65,9 +68,16 @@ def _worker(view, *args, **kwargs):
 def holsterize(view):
     """
     Wrap a view with a holster.
+
+    Wrappers are cached to avoid confusing newer versions of Flask. Flask will
+    be unhappy if it sees two different objects assigned to the same route.
     """
 
-    p = wraps(view)(partial(_worker, view))
+    if view in _holsters:
+        p = _holsters[view]
+    else:
+        p = wraps(view)(partial(_worker, view))
+        _holsters[view] = p
 
     return p
 
