@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, url_for
 from flask.ext.holster.main import init_holster, with_template
 from flask.ext.holster.views import HTMLTemplate
 
@@ -47,6 +47,14 @@ def multiple(i=None, j=None):
 @app.holsterize
 def bare():
     return {"bears": ["grizzly", "black", "panda"]}
+
+@app.holster("/link")
+def link():
+    return {
+        "title": "Link Test",
+        "html_url": url_for("custom-ext", ext="html"),
+        "json_url": url_for("custom-ext", ext="json"),
+    }
 
 if __name__ == "__main__":
     app.run()
