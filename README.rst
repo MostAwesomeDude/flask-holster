@@ -48,8 +48,15 @@ These default renderers are provided mostly for bootstrapping and development,
 although the JSON and YAML renderers are likely very similar to the renderers
 that one might desire in production.
 
-Users can also override renderers for any format or MIME type they would like,
-with ``with_template``::
+Tips & Tricks
+=============
+
+Defining a New Format
+---------------------
+
+Adding new renderers for a format is done in an ad-hoc manner. Users can also
+override renderers for any format or MIME type they would like, with
+``with_template``::
 
     from my_sweet_website import PNGHeaderMaker
     from flask.ext.holster.main import with_template
@@ -58,6 +65,9 @@ with ``with_template``::
     @with_template("image/png", PNGHeaderMaker)
     def custom():
         return {"header": "Welcome to my site!"}
+
+There isn't currently a way to add a renderer which covers an entire
+application. That should really be fixed at some point...
 
 Forcing a Renderer
 ------------------
