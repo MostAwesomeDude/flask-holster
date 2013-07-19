@@ -84,8 +84,8 @@ over the preferred output formats.
 Changelog
 =========
 
-next
-----
+0.3.3
+-----
 
  * Bugfix: Multiple holsterings of a single view in Flask 0.10 and newer were
    causing Flask to refuse to register views due to an internal assertion
