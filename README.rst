@@ -64,14 +64,32 @@ Forcing a Renderer
 
 Sometimes one wants ``url_for()`` to pick a particular renderer for a target
 endpoint, instead of letting Holster and the user agent negotiate a particular
-format. I, uh, should write something here at some point soon.
+format. This is relatively straightforward; just adjust the endpoint slightly
+and explain which extension you want to use::
+
+    from flask import url_for
+
+    @app.holster("/force")
+    def force():
+        return {
+            "url": url_for("sabers", style="cutlass"),
+            "html_url": url_for("sabers-ext", ext="html", style="cutlass"),
+        }
+
+In this example, the ``"sabers-ext"`` endpoint is just like ``"sabers"``, but
+requires an additional argument, ``ext``, which contains the extension to use.
+This allows generation of URLs for endpoints which have fine-grained control
+over the preferred output formats.
 
 Changelog
 =========
 
-0.3.3
------
+next
+----
 
+ * Bugfix: Multiple holsterings of a single view in Flask 0.10 and newer were
+   causing Flask to refuse to register views due to an internal assertion
+   being triggered.
  * Feature: The ``"title"`` key now holds special significance: it will be
    used for titles in built-in renderers, if the renderer supports the notion
    of a title.
