@@ -73,7 +73,7 @@ Holster is on PyPI; run ``pip install Flask-Holster``.
 Step 2: Holsterize your App
 ---------------------------
 
-When you create your Flask application object, init Holster::
+When you create your Flask application object, initialize Holster::
 
     from flask import Flask
     from flask.ext.holster.main import init_holster
@@ -99,11 +99,13 @@ To this::
     def baz(foo, bar):
         return {"foo": foo, "bar": bar}
 
+
 .. toctree::
    :maxdepth: 2
 
    renderers
    escape
+   tips
    api
 
 
