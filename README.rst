@@ -51,6 +51,12 @@ that one might desire in production.
 Changelog
 =========
 
+0.3.4
+-----
+
+ * Feature: The JSON renderer can render custom objects if they implement a
+   ``__json__`` method for reducing to JSON-safe objects.
+
 0.3.3
 -----
 
