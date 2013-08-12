@@ -46,10 +46,19 @@ class HTMLTemplate(object):
             return render_template(self.template, d=d)
 
 
+class BetterJSONEncoder(json.JSONEncoder):
+
+    def default(self, o):
+        try:
+            return o.__json__()
+        except AttributeError:
+            return super(BetterJSONEncoder, self).default(o)
+
+
 class JSONRenderer(object):
 
     def format(self, d):
-        return json.dumps(d)
+        return BetterJSONEncoder().encode(d)
 
 
 class YAMLRenderer(object):
@@ -66,7 +75,7 @@ class YAMLRenderer(object):
             from yaml import safe_dump
             return safe_dump(d)
         except ImportError:
-            return json.dumps(d)
+            return JSONRenderer().format(d)
 
 
 class Str(object):
